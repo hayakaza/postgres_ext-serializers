@@ -174,7 +174,8 @@ module PostgresExt::Serializers::ActiveModel
     def _results_as_json_array(table_name, aliaz = nil)
       row_as_json = _row_to_json table_name
       array_of_json = _postgres_function_node 'array_agg', [row_as_json]
-      _postgres_function_node 'array_to_json', [array_of_json], aliaz
+      array_as_json = _postgres_function_node 'array_to_json', [array_of_json]
+      _postgres_function_node 'coalesce', [array_as_json, '[]'], aliaz
     end
 
     def _array_agg(column, aliaz = nil)
